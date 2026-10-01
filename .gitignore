@@ -1,0 +1,16 @@
+# Dependências e compilados
+node_modules/
+out/
+dist/
+
+# Fotos e dados do modo de teste (gerados pelo app; os dados de captura têm cache baixado)
+docs/capturas*/
+**/.dados-captura/
+
+# Cópia antiga do projeto (29/09/2026), mantida só por segurança
+oraculo-poe2/
+
+# Sistema
+*.log
+Thumbs.db
+desktop.ini

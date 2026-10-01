@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathOfBuilding2>
+  <Build level="87" targetVersion="0_1" className="Witch" ascendClassName="Infernalist" mainSocketGroup="2" viewMode="ITEMS">
+    <PlayerStat stat="Life" value="2150"/>
+    <PlayerStat stat="EnergyShield" value="0"/>
+    <PlayerStat stat="FireResist" value="75"/>
+    <PlayerStat stat="FireResistOverCap" value="30"/>
+    <PlayerStat stat="ColdResist" value="60"/>
+    <PlayerStat stat="ColdResistOverCap" value="0"/>
+    <PlayerStat stat="LightningResist" value="75"/>
+    <PlayerStat stat="LightningResistOverCap" value="5"/>
+    <PlayerStat stat="ChaosResist" value="0"/>
+    <PlayerStat stat="Str" value="120"/>
+    <PlayerStat stat="ReqStr" value="111"/>
+    <PlayerStat stat="Dex" value="80"/>
+    <PlayerStat stat="ReqDex" value="0"/>
+    <PlayerStat stat="Int" value="200"/>
+    <PlayerStat stat="ReqInt" value="150"/>
+    <PlayerStat stat="SpiritUnreserved" value="10"/>
+  </Build>
+  <Skills activeSkillSet="1">
+    <SkillSet id="1" title="Default">
+      <Skill enabled="true" mainActiveSkill="1"><Gem nameSpec="Raise Zombie" skillId="RaiseZombiePlayer" gemId="Metadata/Items/Gems/SkillGemRaiseZombie"/></Skill>
+      <Skill enabled="true" mainActiveSkill="1">
+        <Gem nameSpec="Brutality" skillId="SupportBrutalityPlayer" gemId="Metadata/Items/Gems/SupportGemBrutality"/>
+        <Gem nameSpec="Fireball" skillId="FireballPlayer" gemId="Metadata/Items/Gems/SkillGemFireball"/>
+      </Skill>
+    </SkillSet>
+  </Skills>
+  <Items activeItemSet="1" useSecondWeaponSet="false">
+    <Item id="1">
+Rarity: RARE
+Doom Loop
+Gold Ring
+Unique ID: abc
+Item Level: 80
+LevelReq: 60
+Implicits: 1
+{tags:resource}+(6-15)% to Cold Resistance
++80 to maximum Life
++30% to Fire Resistance
+{range:1}+(10-20) to Strength
+Adds 3 to 7 Physical Damage to Attacks
+    </Item>
+    <Item id="2">
+Rarity: RARE
+Grim Hood
+Leather Hood
+Evasion: 250
+Quality: 20
+Implicits: 0
++60 to maximum Life
++40 to Evasion Rating
++20% to Lightning Resistance
+Corrupted
+    </Item>
+    <Item id="3">
+Rarity: UNIQUE
+Old Band
+Iron Ring
+Selected Variant: 2
+Implicits: 0
+{variant:1}+10 to maximum Life
+{variant:2}+50 to maximum Life
+{disabled}+99 to maximum Mana
+    </Item>
+    <Item id="4">
+Rarity: MAGIC
+Hale Leather Belt of the Fox
+Implicits: 0
++20 to maximum Life
+    </Item>
+    <Item id="5">
+Rarity: RARE
+Glyph Eye
+Sapphire
+Implicits: 0
++10% to Cold Resistance
+    </Item>
+    <ItemSet id="1" title="Default" useSecondWeaponSet="false">
+      <Slot name="Ring 1" itemId="1"/>
+      <Slot name="Ring 2" itemId="3"/>
+      <Slot name="Helmet" itemId="2"/>
+      <Slot name="Belt" itemId="4"/>
+      <Slot name="Gloves" itemId="0"/>
+      <Slot name="Weapon 1 Swap" itemId="4"/>
+      <SocketIdURL name="Jewel 1" nodeId="123" itemPbURL=""/>
+    </ItemSet>
+  </Items>
+  <Tree activeSpec="1">
+    <Spec treeVersion="0_1" classId="3" ascendClassId="1" nodes="101,202,303,404,505">
+      <Sockets>
+        <Socket nodeId="61419" itemId="5"/>
+        <Socket nodeId="2491" itemId="0"/>
+      </Sockets>
+    </Spec>
+  </Tree>
+  <Notes>^7Level with ^xFF4040Fireball^7.
+Swap to &quot;Raise Zombie&quot; at 60 &amp; farm maps.</Notes>
+</PathOfBuilding2>

@@ -1,0 +1,55 @@
+# Empacotamento. `npm run dist` gera em dist/ o .exe portátil (roda sem instalar) e o instalador (setup).
+appId: com.poe4dummies.app
+productName: PoE4Dummies II
+copyright: Não afiliado à Grinding Gear Games.
+directories:
+  output: dist
+  buildResources: build
+# Usa o Electron já baixado, sem nova download.
+electronDist: node_modules/electron/dist
+files:
+  - out/**/*
+  - package.json
+  - "!**/*.map"
+asar: true
+# Bibliotecas nativas (koffi) precisam ficar fora do pacote asar.
+asarUnpack:
+  - node_modules/koffi/**
+win:
+  # Gerado por scripts/make-icon.cjs a partir de build/icon.svg (npm run icon).
+  icon: build/icon.ico
+  # Duas versões: portátil (abre sem instalar) e instalador (atalhos no Menu Iniciar e na Área de Trabalho).
+  target:
+    - target: portable
+      arch: x64
+    - target: nsis
+      arch: x64
+portable:
+  artifactName: PoE4Dummies-II-${version}-portable.exe
+nsis:
+  artifactName: PoE4Dummies-II-${version}-setup.exe
+  # Instalador com telas (escolher pasta), só para o usuário atual: não pede administrador.
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: PoE4Dummies II
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  multiLanguageInstaller: true
+  installerLanguages:
+    - pt_BR
+    - en_US
+  # Desinstalar não apaga configurações, builds e cache (reinstalar volta como estava).
+  deleteAppDataOnUninstall: false
+# Travas de segurança do Electron (fuses) na versão final.
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  loadBrowserProcessSpecificV8Snapshot: false
+  grantFileProtocolExtraPrivileges: false
