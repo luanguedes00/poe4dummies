@@ -2,6 +2,18 @@
 
 Preços, price check e guia de campanha para **Path of Exile 2**, num app só, pensado para quem está começando ou joga casual.
 
+## ⬇️ Baixar
+
+[![Baixar o instalador](https://img.shields.io/badge/BAIXAR-Instalador%20(recomendado)-d8b25e?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.2.0/PoE4Dummies-II-0.2.0-setup.exe)
+&nbsp;
+[![Baixar a versão portátil](https://img.shields.io/badge/BAIXAR-Port%C3%A1til%20(sem%20instalar)-555?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.2.0/PoE4Dummies-II-0.2.0-portable.exe)
+
+1. Clique em um dos botões acima. O download começa na hora (cerca de 100 MB).
+2. Abra o arquivo baixado.
+3. Se aparecer "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**. O aviso aparece porque o app não tem assinatura digital paga.
+
+Versão atual: **0.2.0**. Todas as versões ficam em [Releases](https://github.com/luanguedes00/poe4dummies/releases).
+
 *Prices, price check and campaign helper for Path of Exile 2, in one app, made for new and casual players. English summary at the end.*
 
 > **Projeto feito em vibe coding.** O código foi escrito com IA (Claude, da Anthropic). A ideia, as decisões e os testes no jogo são do autor.
@@ -9,9 +21,7 @@ Preços, price check e guia de campanha para **Path of Exile 2**, num app só, p
 
 ![Mercado](docs/screenshots/mercado.png)
 
-## Download
-
-Em **[Releases](../../releases/latest)** tem duas versões:
+## Qual baixar
 
 | Arquivo | Para quem |
 |---|---|
@@ -19,8 +29,6 @@ Em **[Releases](../../releases/latest)** tem duas versões:
 | `PoE4Dummies-II-<versão>-portable.exe` | **Portátil.** Não instala nada: é só abrir. |
 
 As duas usam as mesmas configurações. Desinstalar não apaga as configurações nem o cache.
-
-Na primeira vez, o Windows pode mostrar "O Windows protegeu o computador", porque o app não tem assinatura digital paga. Clique em **Mais informações → Executar assim mesmo**.
 
 **Requisitos:** Windows 10 ou 11, jogo em **inglês** e PoE2 em **Windowed Fullscreen**, para a sobreposição aparecer por cima do jogo. A interface do app é em português ou inglês.
 
