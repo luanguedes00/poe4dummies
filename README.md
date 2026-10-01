@@ -4,6 +4,9 @@ Preços, price check e guia de campanha para **Path of Exile 2**, num app só, p
 
 *Prices, price check and campaign helper for Path of Exile 2, in one app, made for new and casual players. English summary at the end.*
 
+> **Projeto feito em vibe coding.** O código foi escrito com IA (Claude, da Anthropic). A ideia, as decisões e os testes no jogo são do autor.
+> *Vibe-coded project: the code was written with AI (Anthropic's Claude), with direction and in-game testing by the author.*
+
 ![Mercado](docs/screenshots/mercado.png)
 
 ## Download
