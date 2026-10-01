@@ -58,6 +58,8 @@ interface Props {
   onToggle?: () => void
   onAcknowledge?: () => void
   onClose?: () => void
+  /** Tecla de adicionar à lista (ex.: F3), para os textos de ajuda. */
+  addKey: string
 }
 
 const ERROR_KEYS: ReadonlySet<string> = new Set([
@@ -79,7 +81,7 @@ function signedPercent(value: number): string {
   return `${rounded > 0 ? '+' : ''}${rounded}%`
 }
 
-export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onToggle, onAcknowledge, onClose }: Props) {
+export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onToggle, onAcknowledge, onClose, addKey }: Props) {
   const { entries, total, progress, positions } = view
   // Mais recentes primeiro: o item que acabou de entrar aparece no topo.
   const rows = [...entries].reverse()
@@ -118,7 +120,7 @@ export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onT
       <div className="pc-head drag">
         <div>
           <b>{t('collection.title')}</b>
-          <small className="muted">{view.enabled ? t('collection.on') : t('collection.off')}</small>
+          <small className="muted">{view.enabled ? t('collection.on', { key: addKey }) : t('collection.off')}</small>
         </div>
         {onClose && (
           <button className="btn small" type="button" onClick={onClose} title={t('pc.close')} aria-label={t('pc.close')}>
@@ -161,7 +163,7 @@ export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onT
       )}
 
       <div className="listings">
-        {rows.length === 0 && <div className="pc-note">{t('collection.empty')}</div>}
+        {rows.length === 0 && <div className="pc-note">{t('collection.empty', { key: addKey })}</div>}
         {rows.map((e) => {
           const status = statusText(e)
           const title = [e.name, e.baseType, e.status === 'error' ? errorText(e, t) : null].filter(Boolean).join(' · ')

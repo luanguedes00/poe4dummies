@@ -17,6 +17,8 @@ interface Win32 {
   queryFullProcessImageName: (handle: unknown, flags: number, buffer: Buffer, size: number[]) => boolean
   closeHandle: (handle: unknown) => boolean
   findWindow: (className: string | null, title: string | null) => unknown
+  getAsyncKeyState: (vKey: number) => number
+  setForegroundWindow: (hwnd: unknown) => boolean
 }
 
 const PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
@@ -42,6 +44,8 @@ function load(): Win32 | null {
       ),
       closeHandle: kernel32.func('bool __stdcall CloseHandle(void* handle)'),
       findWindow: user32.func('void* __stdcall FindWindowW(str16 className, str16 title)'),
+      getAsyncKeyState: user32.func('int16 __stdcall GetAsyncKeyState(int vKey)'),
+      setForegroundWindow: user32.func('bool __stdcall SetForegroundWindow(void* hwnd)'),
     }
   } catch {
     win32 = null
@@ -110,11 +114,50 @@ export function gameRunning(): boolean | null {
   const api = load()
   if (!api) return null
   try {
-    for (const [cls, title] of [['POEWindowClass', null], [null, 'Path of Exile 2']] as const) {
-      const hwnd = api.findWindow(cls, title)
-      if (hwnd && isGameExe(windowExe(api, hwnd))) return true
-    }
+    return gameWindow(api) !== null
+  } catch {
+    return null
+  }
+}
+
+function gameWindow(api: Win32): unknown {
+  for (const [cls, title] of [['POEWindowClass', null], [null, 'Path of Exile 2']] as const) {
+    const hwnd = api.findWindow(cls, title)
+    if (hwnd && isGameExe(windowExe(api, hwnd))) return hwnd
+  }
+  return null
+}
+
+/**
+ * Devolve o foco ao jogo (ex.: depois de fechar a lista no ✕, para não precisar
+ * clicar no jogo de novo). O Windows só permite porque o app está em primeiro plano.
+ */
+export function focusGame(): boolean {
+  const api = load()
+  if (!api) return false
+  try {
+    const hwnd = gameWindow(api)
+    return hwnd ? api.setForegroundWindow(hwnd) : false
+  } catch {
     return false
+  }
+}
+
+const VK_LBUTTON = 0x01
+const VK_RBUTTON = 0x02
+const VK_MBUTTON = 0x04
+const VK_ESCAPE = 0x1b
+
+/**
+ * Estado atual do mouse e do Esc (só "está apertado agora", sem ler o que foi
+ * digitado). Serve para fechar o price check ao clicar fora dele. null = indisponível.
+ */
+export function pointerState(): { mouse: boolean; escape: boolean } | null {
+  const api = load()
+  if (!api) return null
+  try {
+    const down = (vk: number) => (api.getAsyncKeyState(vk) & 0x8000) !== 0
+    return { mouse: down(VK_LBUTTON) || down(VK_RBUTTON) || down(VK_MBUTTON), escape: down(VK_ESCAPE) }
   } catch {
     return null
   }

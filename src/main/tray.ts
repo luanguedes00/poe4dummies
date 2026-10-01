@@ -6,7 +6,7 @@
 import { app, dialog, Menu, nativeImage, Tray, type BrowserWindow } from 'electron'
 // .ico com vários tamanhos: o Windows escolhe o certo para a escala da tela.
 import trayIconPath from '../../build/icon.ico?asset'
-import type { Settings } from '../core/settings'
+import { effectiveCloseAction, type Settings } from '../core/settings'
 import { translator } from '../shared/i18n'
 import { EVENTS, type CloseAnswer } from '../shared/ipc'
 import type { SettingsStore } from './settingsStore'
@@ -52,7 +52,10 @@ export class TrayController {
   attach(win: BrowserWindow): void {
     win.on('close', (event) => {
       if (this.quitting) return
-      const action = this.settings.get().closeAction
+      const current = this.settings.get()
+      const action = effectiveCloseAction(current, Date.now())
+      // Venceu o prazo (15 dias) do "Não perguntar de novo": volta a perguntar, sem aviso (a configuração volta para "Perguntar").
+      if (action !== current.closeAction) void this.settings.update({ closeAction: 'ask', closeActionRememberedAt: null })
       if (action === 'quit') return
       event.preventDefault()
       if (action === 'tray') this.hide(win)
@@ -65,7 +68,7 @@ export class TrayController {
     const win = this.asking
     this.asking = null
     if (!win || win.isDestroyed() || choice === 'cancel') return
-    if (remember) await this.settings.update({ closeAction: choice })
+    if (remember) await this.settings.update({ closeAction: choice, closeActionRememberedAt: Date.now() })
     if (choice === 'tray') this.hide(win)
     else app.quit()
   }

@@ -10,7 +10,7 @@ import '../fonts'
 import '../styles.css'
 
 function OverlayApp() {
-  const { t, price, amount } = useApp()
+  const { t, price, amount, settings } = useApp()
   const [text, setText] = useState('')
   const [result, setResult] = useState<PriceCheckResult | null>(null)
   const [loading, setLoading] = useState(false)
@@ -71,6 +71,7 @@ function OverlayApp() {
           onToggle={() => void api.toggleCollection()}
           onAcknowledge={() => void api.acknowledgeCollection()}
           onClose={close}
+          addKey={settings.collectionAddHotkey}
         />
       </div>
     )
@@ -78,7 +79,8 @@ function OverlayApp() {
 
   return (
     <div className="overlay-root">
-      <PriceCheckView text={text} result={result} loading={loading} onResearch={(o, extra) => void research(o, extra)} onClose={close} />
+      {/* Sem botão de fechar: some ao clicar fora, com Esc ou trocando de programa (processo principal). */}
+      <PriceCheckView text={text} result={result} loading={loading} onResearch={(o, extra) => void research(o, extra)} />
     </div>
   )
 }

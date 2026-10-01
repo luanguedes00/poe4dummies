@@ -1,7 +1,7 @@
 // Atalhos globais do app: formato, normalização e conflitos conhecidos.
 // Lógica pura (sem Electron e sem DOM): roda no processo principal e na interface.
 
-export const HOTKEY_SLOTS = ['dashboard', 'collection', 'overlay'] as const
+export const HOTKEY_SLOTS = ['dashboard', 'collection', 'collectionAdd', 'overlay'] as const
 export type HotkeySlot = (typeof HOTKEY_SLOTS)[number]
 
 /** Cópia simulada pelo atalho da sobreposição: simples (Ctrl+C) ou avançada (Ctrl+Alt+C, com tiers). */
@@ -14,12 +14,19 @@ export type CopyMode = (typeof COPY_MODES)[number]
  * navegadores, Discord, Steam e drivers de vídeo. D = Dashboard; C = Coleta (fica ao lado do
  * Ctrl+C usado em seguida). Ctrl+Shift ficou de fora porque navegadores e o driver da AMD o usam.
  * A sobreposição usa por padrão a cópia do próprio jogo (null = Ctrl+C / Ctrl+Alt+C, sem atalho global).
+ * "Adicionar à lista" é uma tecla só (F3, sugerida pelo usuário) e vale apenas com o PoE2 em foco:
+ * fora do jogo a tecla volta a funcionar normal nos outros programas. Assim o Ctrl+C fica só para o
+ * price check. NÃO CONFIRMADO: se o PoE2 usa F3 em alguma configuração; dá para trocar em Configurações.
  */
 export const DEFAULT_HOTKEYS: Record<HotkeySlot, string | null> = {
   dashboard: 'Alt+Shift+D',
   collection: 'Alt+Shift+C',
+  collectionAdd: 'F3',
   overlay: null,
 }
+
+/** Atalhos que só ficam registrados com o jogo em foco (não roubam a tecla dos outros programas). */
+export const GAME_ONLY_SLOTS: readonly HotkeySlot[] = ['collectionAdd']
 
 /** Atalhos aceitos pelo Electron, restritos a combinações simples e seguras. */
 export const ACCELERATOR = /^(?:(?:CommandOrControl|Ctrl|Alt|Shift)\+){1,3}(?:[A-Z0-9]|F(?:[1-9]|1[0-2]))$|^F(?:[1-9]|1[0-2])$/
@@ -113,8 +120,13 @@ export type HotkeyIssueCode =
 export type HotkeyErrorCode = Extract<HotkeyIssueCode, 'invalid' | 'reserved' | 'shift-only' | 'app-conflict'>
 
 /** Atalhos em uso, lidos das configurações. */
-export function currentHotkeys(s: { dashboardHotkey: string; collectionHotkey: string; overlay: { hotkey: string | null } }): Record<HotkeySlot, string | null> {
-  return { dashboard: s.dashboardHotkey, collection: s.collectionHotkey, overlay: s.overlay.hotkey }
+export function currentHotkeys(s: {
+  dashboardHotkey: string
+  collectionHotkey: string
+  collectionAddHotkey: string
+  overlay: { hotkey: string | null }
+}): Record<HotkeySlot, string | null> {
+  return { dashboard: s.dashboardHotkey, collection: s.collectionHotkey, collectionAdd: s.collectionAddHotkey, overlay: s.overlay.hotkey }
 }
 
 export interface HotkeyIssue {
@@ -169,7 +181,8 @@ export function checkHotkey(slot: HotkeySlot, raw: string | null, current: Recor
   const known = KNOWN[accelerator]
   if (known) warnings.push({ code: known })
   if (TEXT_EDITING.has(accelerator)) warnings.push({ code: 'text-editing' })
-  if (!accelerator.includes('+')) warnings.push({ code: 'no-modifier' })
+  // Tecla solta só é problema para atalhos globais; os que valem só no jogo não tiram a tecla dos outros programas.
+  if (!accelerator.includes('+') && !GAME_ONLY_SLOTS.includes(slot)) warnings.push({ code: 'no-modifier' })
   return { accelerator, errors, warnings }
 }
 

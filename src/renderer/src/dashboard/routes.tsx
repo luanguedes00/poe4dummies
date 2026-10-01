@@ -69,7 +69,7 @@ function SessionCard({ view, tracker }: { view: CollectionView; tracker: Tracker
 }
 
 export function CollectionRoute() {
-  const { t, price, amount } = useApp()
+  const { t, price, amount, settings } = useApp()
   const [view, setView] = useState<CollectionView | null>(null)
   const [tracker, setTracker] = useState<TrackerPayload | null>(null)
   useEffect(() => {
@@ -97,6 +97,7 @@ export function CollectionRoute() {
         onClear={() => void api.clearCollection()}
         onToggle={() => void api.toggleCollection()}
         onAcknowledge={() => void api.acknowledgeCollection()}
+        addKey={settings.collectionAddHotkey}
       />
     </div>
     </>

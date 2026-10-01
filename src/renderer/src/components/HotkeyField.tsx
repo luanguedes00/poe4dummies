@@ -9,6 +9,7 @@ import { api, useApp } from '../lib/app'
 const SLOT_LABEL: Record<HotkeySlot, MessageKey> = {
   dashboard: 'settings.hotkey',
   collection: 'settings.collectionHotkey',
+  collectionAdd: 'settings.collectionAddHotkey',
   overlay: 'settings.overlayHotkey',
 }
 

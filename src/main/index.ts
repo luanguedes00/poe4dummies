@@ -23,14 +23,14 @@ import { CollectionService } from './collectionService'
 import { clipboardSequence, focusState, gameRunning } from './gameFocus'
 import { HotkeyManager } from './hotkeys'
 import { sendKeys } from './keySender'
-import { copyKeySequence } from '../core/hotkeys'
+import { copyKeySequence, GAME_ONLY_SLOTS } from '../core/hotkeys'
 import { TrackerService } from './trackerService'
 import { captureDir, runCapture } from './devCapture'
 import { registerIpc } from './ipc'
 import { MarketService } from './marketService'
 import { applyGlobalSecurity, applySessionSecurity } from './security'
 import { SettingsStore } from './settingsStore'
-import { createCampaignWindow, createDashboard, createOverlay, fitCampaignHeight, getCampaignUi, setCampaignUi, showCampaignWindow, showOverlayNearCursor } from './windows'
+import { createCampaignWindow, createDashboard, createOverlay, fitCampaignHeight, getCampaignUi, setCampaignUi, hideOverlay as hideOverlayWindow, showCampaignWindow, showOverlayNearCursor, stopOverlayAutoClose } from './windows'
 import { zoneGuide } from '../core/campaign/guide'
 
 // A GGG pede um User-Agent que identifique a ferramenta.
@@ -207,6 +207,8 @@ if (!app.requestSingleInstanceLock()) {
         const win = ensureOverlay()
         const event: OverlayEvent = { state: 'collection', view }
         win.webContents.send(EVENTS.overlay, event)
+        // Modo lista mantém o comportamento dele (✕ e aviso que some sozinho), mesmo se o price check estava aberto.
+        stopOverlayAutoClose(win)
         if (!win.isVisible()) showOverlayNearCursor(win, false)
         if (toastTimer) clearTimeout(toastTimer)
         toastTimer = setTimeout(() => {
@@ -257,7 +259,23 @@ if (!app.requestSingleInstanceLock()) {
       if (!sendKeys(copyKeySequence(current.hotkey, current.copyMode))) hotkeyCopyAt = 0
     }
 
+    // Tecla "adicionar à lista" (padrão F3, só com o jogo em foco): copia o item sob o mouse e manda para a lista.
+    // Assim o Ctrl+C fica só para o price check (antes, com o modo lista ligado, o Ctrl+C ia para a lista).
+    let listCopyAt = 0
+    const collectionAddHotkey = () => {
+      if (focusState() !== 'game') return
+      listCopyAt = Date.now()
+      if (!sendKeys(copyKeySequence(settings.get().collectionAddHotkey, 'simple'))) listCopyAt = 0
+    }
+
     const clipboardWatcher = new ClipboardWatcher((text) => {
+      const viaList = Date.now() - listCopyAt < 1500
+      listCopyAt = 0
+      if (viaList) {
+        if (!collection.isEnabled()) collection.setEnabled(true)
+        collection.add(text)
+        return
+      }
       const viaHotkey = Date.now() - hotkeyCopyAt < 1500
       hotkeyCopyAt = 0
       const current = settings.get().overlay
@@ -267,8 +285,7 @@ if (!app.requestSingleInstanceLock()) {
         // Se não der para saber a janela em foco ("unknown"), não bloqueia.
         if (current.requireGameFocus && focusState() === 'other') return
       }
-      if (collection.isEnabled()) collection.add(text)
-      else void runPriceCheck(text)
+      void runPriceCheck(text)
     }, clipboardSequence)
 
     // Campanha: janela própria (separada do price check). Ao entrar numa área da campanha,
@@ -344,8 +361,14 @@ if (!app.requestSingleInstanceLock()) {
     const hotkeys = new HotkeyManager({
       dashboard: showDashboard,
       collection: () => collection.setEnabled(!collection.isEnabled()),
+      collectionAdd: collectionAddHotkey,
       overlay: overlayHotkey,
     })
+    // Atalhos "só no jogo" (adicionar à lista): registrados com o PoE2 em foco, soltos fora dele.
+    setInterval(() => {
+      const inGame = focusState() === 'game'
+      for (const slot of GAME_ONLY_SLOTS) hotkeys.setActive(slot, inGame)
+    }, 300).unref()
 
     registerIpc({
       market,
@@ -355,7 +378,10 @@ if (!app.requestSingleInstanceLock()) {
       tracker,
       hotkeys,
       dialogParent: () => dashboard,
-      hideOverlay: () => overlay?.hide(),
+      // ✕ da lista / Esc na sobreposição: fecha e devolve o foco ao jogo.
+      hideOverlay: () => {
+        if (overlay) hideOverlayWindow(overlay)
+      },
       hideCampaign: () => {
         campaignWanted = false
         campaignWin?.hide()
@@ -382,10 +408,12 @@ if (!app.requestSingleInstanceLock()) {
 
     const applySettings = (current: Settings) => {
       const { overlay: o } = current
-      if (o.enabled && (o.clipboardTrigger || o.hotkey !== null)) void clipboardWatcher.start()
+      // A tecla de adicionar à lista também lê a cópia: com a sobreposição ligada, o observador fica ativo.
+      if (o.enabled) void clipboardWatcher.start()
       else clipboardWatcher.stop()
       hotkeys.apply('dashboard', current.dashboardHotkey)
       hotkeys.apply('collection', current.collectionHotkey)
+      hotkeys.apply('collectionAdd', o.enabled ? current.collectionAddHotkey : null)
       // Sobreposição desligada: solta a combinação para o resto do sistema.
       hotkeys.apply('overlay', o.enabled ? o.hotkey : null)
       tracker.apply(current.tracker.enabled)

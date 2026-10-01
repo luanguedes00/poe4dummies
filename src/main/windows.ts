@@ -1,10 +1,11 @@
 import { app, BrowserWindow, screen } from 'electron'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 // O bundler copia o PNG para out/ e devolve o caminho real (funciona dentro do asar).
 import appIcon from '../../build/icon.png?asset'
 import { APP_ORIGIN } from './appProtocol'
 import { captureDir } from './devCapture'
+import { focusGame, foregroundExe, isGameExe, pointerState } from './gameFocus'
 import { secureWebPreferences } from './security'
 
 const BACKGROUND = '#0e0f11'
@@ -67,8 +68,75 @@ export function createOverlay(): BrowserWindow {
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setVisibleOnAllWorkspaces(true)
   win.on('blur', () => win.hide())
+  closeOnOutsideClick(win)
   load(win, 'overlay')
   return win
+}
+
+/** Só o price check fecha sozinho; o aviso/painel do modo lista mantém o comportamento dele (com o ✕). */
+const autoClose = new WeakSet<BrowserWindow>()
+
+/**
+ * Fecha a sobreposição. Se ela estava com o foco (o usuário clicou nela, ex.: no ✕ da lista),
+ * o foco volta direto para o jogo, sem precisar clicar nele de novo. Se o foco estava em outro
+ * lugar (jogo, painel do app, outro programa), não mexe.
+ */
+export function hideOverlay(win: BrowserWindow): void {
+  if (win.isDestroyed() || !win.isVisible()) return
+  const hadFocus = win.isFocused()
+  win.hide()
+  if (hadFocus) focusGame()
+}
+
+/** A sobreposição passou a mostrar o modo lista: para de fechar sozinha. */
+export function stopOverlayAutoClose(win: BrowserWindow): void {
+  autoClose.delete(win)
+}
+
+/**
+ * Fecha o price check como as janelas do jogo: clique fora dele, Esc ou trocar
+ * de programa. O Windows nem sempre deixa a sobreposição ganhar o foco do jogo
+ * (aí o "blur" nunca acontece), então olhamos o mouse enquanto ela está aberta.
+ * Clique dentro dela funciona normal; depois de focada, o blur cuida do resto.
+ */
+function closeOnOutsideClick(win: BrowserWindow): void {
+  const ownExe = basename(process.execPath).toLowerCase()
+  let timer: NodeJS.Timeout | null = null
+  // Botão já apertado quando a janela abriu não conta: só cliques novos.
+  let mouseWas = true
+  let escapeWas = true
+  const stop = () => {
+    if (timer) clearInterval(timer)
+    timer = null
+  }
+  const tick = () => {
+    if (win.isDestroyed() || !win.isVisible() || !autoClose.has(win)) return stop()
+    const state = pointerState()
+    if (!state) return
+    const click = state.mouse && !mouseWas
+    const escape = state.escape && !escapeWas
+    mouseWas = state.mouse
+    escapeWas = state.escape
+    if (escape) return hideOverlay(win)
+    // Não confia em isFocused(): o Electron pode achar que a janela tem foco quando o Windows
+    // recusou tirar o foco do jogo, e aí o clique no jogo era ignorado (não fechava).
+    if (click) {
+      const p = screen.getCursorScreenPoint()
+      const b = win.getBounds()
+      if (p.x < b.x || p.x >= b.x + b.width || p.y < b.y || p.y >= b.y + b.height) return win.hide()
+    }
+    // Trocou para outro programa (nem o jogo, nem este app).
+    const exe = foregroundExe()
+    if (exe !== null && !isGameExe(exe) && exe.toLowerCase() !== ownExe) win.hide()
+  }
+  win.on('show', () => {
+    stop()
+    mouseWas = true
+    escapeWas = true
+    timer = setInterval(tick, 50)
+  })
+  win.on('hide', stop)
+  win.on('closed', stop)
 }
 
 // ---------------------------------------------------------------- campanha
@@ -215,6 +283,9 @@ export function showOverlayNearCursor(win: BrowserWindow, focus = true): void {
   x = Math.max(area.x, Math.min(x, area.x + area.width - OVERLAY_SIZE.width))
   const y = Math.max(area.y, Math.min(cursor.y - 80, area.y + area.height - OVERLAY_SIZE.height))
   win.setBounds({ x: Math.round(x), y: Math.round(y), ...OVERLAY_SIZE })
+  // Com foco = price check (fecha ao clicar fora); sem foco = aviso do modo lista (fica como era).
+  if (focus) autoClose.add(win)
+  else autoClose.delete(win)
   if (focus) {
     win.show()
     win.focus()

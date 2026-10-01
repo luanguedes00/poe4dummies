@@ -258,7 +258,12 @@ export function SettingsPage() {
           </label>
           <label className="field">
             <span>{t('settings.closeAction')}</span>
-            <select className="select" value={settings.closeAction} onChange={(e) => void save({ closeAction: e.target.value as Settings['closeAction'] })}>
+            {/* Escolha feita aqui não expira (só o "Não perguntar por 15 dias" da janela de fechar expira). */}
+            <select
+              className="select"
+              value={settings.closeAction}
+              onChange={(e) => void save({ closeAction: e.target.value as Settings['closeAction'], closeActionRememberedAt: null })}
+            >
               <option value="ask">{t('settings.closeAction.ask')}</option>
               <option value="tray">{t('settings.closeAction.tray')}</option>
               <option value="quit">{t('settings.closeAction.quit')}</option>
@@ -283,6 +288,7 @@ export function SettingsPage() {
           <small className="muted">{t('settings.hotkeyHint')}</small>
           <HotkeyField slot="dashboard" value={settings.dashboardHotkey} current={hotkeys} registered={hotkeyStatus?.dashboard.registered ?? true} onSaved={onHotkeySaved} />
           <HotkeyField slot="collection" value={settings.collectionHotkey} current={hotkeys} registered={hotkeyStatus?.collection.registered ?? true} onSaved={onHotkeySaved} />
+          <HotkeyField slot="collectionAdd" value={settings.collectionAddHotkey} current={hotkeys} registered={hotkeyStatus?.collectionAdd.registered ?? true} hint={t('settings.collectionAddHint')} onSaved={onHotkeySaved} />
         </fieldset>
 
         <fieldset>

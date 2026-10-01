@@ -3,7 +3,7 @@
 // se outro programa já usa a combinação, o antigo continua valendo e a interface recebe o erro.
 
 import { globalShortcut } from 'electron'
-import { HOTKEY_SLOTS, type HotkeySlot } from '../core/hotkeys'
+import { GAME_ONLY_SLOTS, HOTKEY_SLOTS, type HotkeySlot } from '../core/hotkeys'
 import type { HotkeyStatus } from '../shared/ipc'
 
 function register(accelerator: string, action: () => void): boolean {
@@ -21,13 +21,29 @@ export class HotkeyManager {
   private readonly bound = new Map<HotkeySlot, string>()
   private suspended = false
   private resumeTimer: NodeJS.Timeout | null = null
+  /** Atalhos "só no jogo" fora do jogo: ficam soltos para os outros programas usarem a tecla. */
+  private readonly inactive = new Set<HotkeySlot>(GAME_ONLY_SLOTS)
 
   constructor(private readonly actions: Record<HotkeySlot, () => void>) {}
+
+  /** Liga/desliga um atalho "só no jogo" conforme o foco (registra/solta no sistema). */
+  setActive(slot: HotkeySlot, active: boolean): void {
+    if (active === !this.inactive.has(slot)) return
+    if (active) this.inactive.delete(slot)
+    else this.inactive.add(slot)
+    this.apply(slot, this.wanted.get(slot) ?? null)
+  }
 
   /** Aplica o valor das configurações (início do app e mudanças). */
   apply(slot: HotkeySlot, accelerator: string | null): void {
     this.wanted.set(slot, accelerator)
     if (this.suspended) return
+    if (this.inactive.has(slot)) {
+      const bound = this.bound.get(slot)
+      if (bound) globalShortcut.unregister(bound)
+      this.bound.delete(slot)
+      return
+    }
     const previous = this.bound.get(slot)
     if (previous === accelerator) return
     if (previous) globalShortcut.unregister(previous)
@@ -41,6 +57,11 @@ export class HotkeyManager {
    */
   trySet(slot: HotkeySlot, accelerator: string | null): boolean {
     if (this.suspended) this.resume()
+    // Fora do jogo o atalho "só no jogo" não é registrado agora: salva e registra ao voltar para o jogo.
+    if (this.inactive.has(slot)) {
+      this.wanted.set(slot, accelerator)
+      return true
+    }
     const previous = this.bound.get(slot)
     if (previous === accelerator) {
       this.wanted.set(slot, accelerator)
@@ -80,7 +101,7 @@ export class HotkeyManager {
     const out = {} as HotkeyStatus
     for (const slot of HOTKEY_SLOTS) {
       const accelerator = this.wanted.get(slot) ?? null
-      out[slot] = { accelerator, registered: accelerator === null || this.suspended || this.bound.get(slot) === accelerator }
+      out[slot] = { accelerator, registered: accelerator === null || this.suspended || this.inactive.has(slot) || this.bound.get(slot) === accelerator }
     }
     return out
   }

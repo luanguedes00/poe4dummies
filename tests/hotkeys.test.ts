@@ -129,3 +129,33 @@ describe('atalhos nas configurações', () => {
     expect(() => applySettingsPatch(DEFAULT_SETTINGS, { overlay: { copyMode: 'turbo' } })).toThrow()
   })
 })
+
+describe('adicionar à lista (tecla só no jogo)', () => {
+  it('padrão F3, sem aviso de tecla solta (só vale com o jogo em foco)', () => {
+    expect(DEFAULT_SETTINGS.collectionAddHotkey).toBe('F3')
+    const check = checkHotkey('collectionAdd', 'F3', inUse)
+    expect(check.errors).toEqual([])
+    expect(check.warnings).toEqual([])
+    // Em atalho global a mesma tecla solta continua com aviso.
+    expect(checkHotkey('dashboard', 'F3', inUse).warnings.map((w) => w.code)).toContain('no-modifier')
+  })
+
+  it('não deixa repetir outro atalho do app nem usar Ctrl+C', () => {
+    expect(checkHotkey('collectionAdd', 'Alt+Shift+D', inUse).errors).toEqual([{ code: 'app-conflict', slot: 'dashboard' }])
+    expect(checkHotkey('collectionAdd', 'Ctrl+C', inUse).errors.map((e) => e.code)).toContain('reserved')
+  })
+
+  it('a cópia simulada pela tecla é um Ctrl+C simples', () => {
+    expect(copyKeySequence('F3', 'simple')).toEqual([
+      { key: 'ctrl', down: true },
+      { key: 'c', down: true },
+      { key: 'c', down: false },
+      { key: 'ctrl', down: false },
+    ])
+  })
+
+  it('configuração antiga sem a tecla volta ao padrão', () => {
+    const { collectionAddHotkey: _, ...old } = DEFAULT_SETTINGS
+    expect(readSettings(old).collectionAddHotkey).toBe('F3')
+  })
+})

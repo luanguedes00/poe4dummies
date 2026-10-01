@@ -78,11 +78,18 @@ export const settingsSchema = z.object({
   dashboardHotkey: hotkeySchema,
   /** Liga/desliga o modo lista (vários itens seguidos). */
   collectionHotkey: hotkeySchema,
+  /** Adiciona o item sob o mouse à lista (só com o jogo em foco). */
+  collectionAddHotkey: hotkeySchema,
   overlay: overlaySettingsSchema,
   watchlist: z.array(watchEntrySchema).max(200),
   tracker: trackerSettingsSchema,
   /** O que o X da janela faz: perguntar, continuar na bandeja (sobreposição segue ativa) ou fechar o app. */
   closeAction: z.enum(['ask', 'tray', 'quit']),
+  /**
+   * Quando a escolha veio do "Não perguntar de novo" da janela de fechar (ms). Depois de 15 dias o
+   * app volta a perguntar, sem aviso (pedido do usuário). null = escolhida em Configurações (não expira).
+   */
+  closeActionRememberedAt: z.number().int().nonnegative().nullable(),
 })
 
 export type Settings = z.infer<typeof settingsSchema>
@@ -98,8 +105,10 @@ export const DEFAULT_SETTINGS: Settings = {
   // Padrões explicados em core/hotkeys.ts. Valor salvo pelo usuário sempre vale mais que o padrão.
   dashboardHotkey: DEFAULT_HOTKEYS.dashboard!,
   collectionHotkey: DEFAULT_HOTKEYS.collection!,
+  collectionAddHotkey: DEFAULT_HOTKEYS.collectionAdd!,
   tracker: { enabled: true, logPath: null },
   closeAction: 'ask',
+  closeActionRememberedAt: null,
   overlay: {
     enabled: true,
     clipboardTrigger: true,
@@ -151,6 +160,22 @@ export function readSettings(raw: unknown): Settings {
   if (version < 2 && overlay.listingStatus === 'online') overlay.listingStatus = 'securable'
   result.version = SETTINGS_VERSION
   return settingsSchema.parse(result)
+}
+
+/** Prazo do "Não perguntar" da janela de fechar (pedido do usuário: voltar a perguntar depois de um tempo). */
+export const CLOSE_REMEMBER_DAYS = 15
+const DAY_MS = 24 * 60 * 60 * 1000
+
+/** Quando volta a perguntar (ms), ou null se a escolha não expira. */
+export function closeChoiceExpiresAt(s: Pick<Settings, 'closeAction' | 'closeActionRememberedAt'>): number | null {
+  if (s.closeAction === 'ask' || s.closeActionRememberedAt === null) return null
+  return s.closeActionRememberedAt + CLOSE_REMEMBER_DAYS * DAY_MS
+}
+
+/** O que o X da janela faz agora: a escolha salva, ou "perguntar" se o prazo do "não perguntar" venceu. */
+export function effectiveCloseAction(s: Pick<Settings, 'closeAction' | 'closeActionRememberedAt'>, now: number): Settings['closeAction'] {
+  const expires = closeChoiceExpiresAt(s)
+  return expires !== null && now >= expires ? 'ask' : s.closeAction
 }
 
 export const settingsPatchSchema = settingsSchema

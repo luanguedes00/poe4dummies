@@ -201,7 +201,9 @@ export function registerIpc({ market, build, settings, collection, tracker, hotk
         ? { dashboardHotkey: check.accelerator }
         : slot === 'collection'
           ? { collectionHotkey: check.accelerator }
-          : { overlay: { hotkey: check.accelerator } }
+          : slot === 'collectionAdd'
+            ? { collectionAddHotkey: check.accelerator }
+            : { overlay: { hotkey: check.accelerator } }
     return { ok: true, settings: await settings.update(patch) }
   })
   handle(IPC.priceCheck, async (_e, arg) => {
