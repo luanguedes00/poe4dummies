@@ -7,6 +7,7 @@ import { Hint } from '../components/ui'
 import { api, useApp } from '../lib/app'
 import { useSticky } from '../lib/sticky'
 import { rank, readable, Suggest, toNumber } from './search/Suggest'
+import { X } from '@phosphor-icons/react'
 
 // Obrigatório: o tablet precisa ter todos. Qualquer um: basta um deles. Esconder: tira da busca.
 const MODES = ['all', 'any', 'exclude'] as const satisfies readonly Mode[]
@@ -114,7 +115,7 @@ export function RegexView() {
                   aria-label={t('pc.min')}
                 />
                 <button type="button" className="btn ghost small" onClick={() => setSelection((all) => all.filter((x) => x.key !== s.key))} aria-label={t('search.remove')}>
-                  ✕
+                  <X className="ico" size={14} weight="bold" aria-hidden="true" />
                 </button>
               </div>
             )

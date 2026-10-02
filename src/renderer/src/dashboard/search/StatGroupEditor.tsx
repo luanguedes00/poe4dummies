@@ -6,6 +6,7 @@ import { TierSelect, tierSpan } from '../../components/TierSelect'
 import { Hint } from '../../components/ui'
 import { useApp } from '../../lib/app'
 import { rank, readable, Suggest } from './Suggest'
+import { X } from '@phosphor-icons/react'
 
 export interface StatRowDraft {
   stat: StatEntry
@@ -125,7 +126,7 @@ export function StatGroupEditor({ group, primary, allStats, tiersById, onChange,
                 <input className="input num" inputMode="decimal" placeholder={t('pc.min')} aria-label={`${t('pc.min')} ${r.stat.text}`} value={r.min} onChange={(e) => setRow(i, { min: e.target.value })} />
                 <input className="input num" inputMode="decimal" placeholder={t('search.max')} aria-label={`${t('search.max')} ${r.stat.text}`} value={r.max} onChange={(e) => setRow(i, { max: e.target.value })} />
                 <button className="btn icon-btn" type="button" aria-label={`${t('search.remove')} ${r.stat.text}`} onClick={() => onChange({ ...group, rows: group.rows.filter((_, j) => j !== i) })}>
-                  ✕
+                  <X className="ico" size={14} weight="bold" aria-hidden="true" />
                 </button>
               </div>
             )

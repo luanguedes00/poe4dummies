@@ -284,7 +284,3 @@ export function parseItemText(text: string): ParsedItem {
   // nenhum mod da trade e é descartado pelo matcher. Aqui só marcamos flags.
   return item
 }
-
-export function itemTitle(item: ParsedItem): string {
-  return item.name ? `${item.name} — ${item.baseLine}` : item.baseLine
-}

@@ -12,6 +12,7 @@ import type { TopTablets } from '../../../core/farm/market'
 import { Hint } from '../components/ui'
 import { api, errorKey, useApp } from '../lib/app'
 import { useSticky } from '../lib/sticky'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 
 type Kind = 'full' | 'budget'
 
@@ -245,7 +246,7 @@ function RecipeRow({ guide, recipe, count, tablets, real }: { guide: MechanicGui
       <div className="recipe-top">
         <span className="recipe-count num">{count}×</span>
         <button type="button" className="link-btn recipe-name" onClick={() => void open()} title={t('farm.openTrade')}>
-          {recipe.label} <span aria-hidden="true">↗</span>
+          {recipe.label} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
         </button>
         <span className={`rarity-tag ${recipe.rarity}`}>{t(`farm.rarity.${recipe.rarity}`)}</span>
         <button type="button" className="link-btn recipe-price" onClick={() => void open()} title={priceTitle}>

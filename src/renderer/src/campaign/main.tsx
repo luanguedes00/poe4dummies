@@ -10,6 +10,7 @@ import { ZoneCard } from '../components/ZoneCard'
 import { api, AppProvider, useApp } from '../lib/app'
 import '../fonts'
 import '../styles.css'
+import { X } from '@phosphor-icons/react'
 
 function CampaignApp() {
   const { t } = useApp()
@@ -54,7 +55,7 @@ function CampaignApp() {
         </svg>
       </button>
       <button type="button" onClick={() => void api.hideCampaign()} title={t('pc.close')} aria-label={t('pc.close')}>
-        ✕
+        <X className="ico" size={14} weight="bold" aria-hidden="true" />
       </button>
     </span>
   )

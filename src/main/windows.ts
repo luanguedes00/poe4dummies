@@ -68,7 +68,7 @@ export function createOverlay(): BrowserWindow {
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setVisibleOnAllWorkspaces(true)
   win.on('blur', () => win.hide())
-  closeOnOutsideClick(win)
+  outsideWatch.set(win, closeOnOutsideClick(win))
   load(win, 'overlay')
   return win
 }
@@ -99,9 +99,10 @@ export function stopOverlayAutoClose(win: BrowserWindow): void {
  * (aí o "blur" nunca acontece), então olhamos o mouse enquanto ela está aberta.
  * Clique dentro dela funciona normal; depois de focada, o blur cuida do resto.
  */
-function closeOnOutsideClick(win: BrowserWindow): void {
+function closeOnOutsideClick(win: BrowserWindow): () => void {
   const ownExe = basename(process.execPath).toLowerCase()
   let timer: NodeJS.Timeout | null = null
+  let ticks = 0
   // Botão já apertado quando a janela abriu não conta: só cliques novos.
   let mouseWas = true
   let escapeWas = true
@@ -125,19 +126,26 @@ function closeOnOutsideClick(win: BrowserWindow): void {
       const b = win.getBounds()
       if (p.x < b.x || p.x >= b.x + b.width || p.y < b.y || p.y >= b.y + b.height) return win.hide()
     }
-    // Trocou para outro programa (nem o jogo, nem este app).
+    // Trocou para outro programa (nem o jogo, nem este app). Checagem mais cara: 4x por segundo basta.
+    if (++ticks % 5 !== 0) return
     const exe = foregroundExe()
     if (exe !== null && !isGameExe(exe) && exe.toLowerCase() !== ownExe) win.hide()
   }
-  win.on('show', () => {
+  const start = () => {
     stop()
+    ticks = 0
     mouseWas = true
     escapeWas = true
     timer = setInterval(tick, 50)
-  })
+  }
+  win.on('show', start)
   win.on('hide', stop)
   win.on('closed', stop)
+  return start
 }
+
+/** Liga a vigia de clique fora de cada sobreposição (para religar quando ela já está aberta). */
+const outsideWatch = new WeakMap<BrowserWindow, () => void>()
 
 // ---------------------------------------------------------------- campanha
 // Janela própria do quadro da campanha (separada do price check): pequena,
@@ -287,6 +295,8 @@ export function showOverlayNearCursor(win: BrowserWindow, focus = true): void {
   if (focus) autoClose.add(win)
   else autoClose.delete(win)
   if (focus) {
+    // Já aberta (ex.: aviso do modo lista na tela): o "show" não dispara de novo, então religa a vigia aqui.
+    if (win.isVisible()) outsideWatch.get(win)?.()
     win.show()
     win.focus()
   } else {

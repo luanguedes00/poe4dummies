@@ -20,6 +20,7 @@ import { iconSrc } from '../components/ItemIcon'
 import { LeagueSelect } from '../components/LeagueSelect'
 // Ícone do app na faixa do topo (a mesma arte do ícone da barra de tarefas).
 import divineIcon from '../../../../build/divine.png'
+import { ArrowClockwise } from '@phosphor-icons/react'
 
 type Page = 'market' | 'opportunities' | 'watchlist' | 'pricecheck' | 'collection' | 'tracker' | 'farm' | 'build' | 'settings'
 
@@ -114,7 +115,7 @@ function Shell() {
             title={market.loading ? t('top.updating') : market.snapshot ? t('top.updatedAgo', { time: timeAgo(market.snapshot.fetchedAt, t) }) : undefined}
           >
             <span className={market.loading ? 'spin' : ''} aria-hidden="true">
-              ⟳
+              <ArrowClockwise className="ico" size={14} aria-hidden="true" />
             </span>{' '}
             {t('top.refreshShort')}
           </button>

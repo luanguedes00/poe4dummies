@@ -89,6 +89,7 @@ export type TrackerMessageKey =
   | 'tracker.play.last'
   | 'tracker.play.since'
   | 'tracker.play.range'
+  | 'tracker.stat.empty'
   | 'tracker.play.endgame'
   | 'tracker.play.story'
   | 'tracker.play.maps'
@@ -221,6 +222,7 @@ function StatusBanner({ t, status, onChooseFile, onUseAutomatic, onReload }: Omi
 
 function StatsList({ t, stats, locale }: { t: TrackerTranslate; stats: RunStats | null; locale: string }) {
   const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 })
+  if (!stats) return <p className="muted" style={{ margin: 0 }}>{t('tracker.stat.empty')}</p>
   return (
     <dl className="stats">
       <div>
@@ -469,8 +471,8 @@ function SplitGroup({ title, a, b, labelA, labelB }: { title: string; a: number;
   const pa = Math.round((a / sum) * 100)
   return (
     <div className="play-group">
-      <div className="label">
-        {title} · <span className="num">{formatSpan(sum)}</span>
+      <div className="label play-group-head">
+        <span>{title}</span> <span className="num">{formatSpan(sum)}</span>
       </div>
       <div className="play-split" aria-hidden="true">
         <span className="a" style={{ width: `${(a / sum) * 100}%` }} />
@@ -526,14 +528,14 @@ function PlaySessionCard({ t, locale, sessions, snapshot, now }: { t: TrackerTra
         <span className="muted">
           {v.live || v.endedAt === null
             ? t('tracker.play.since', { start: time(v.startedAt) })
-            : `${day(v.startedAt)} · ${t('tracker.play.range', { start: time(v.startedAt), end: time(v.endedAt) })}`}
+            : `${day(v.startedAt)}, ${t('tracker.play.range', { start: time(v.startedAt), end: time(v.endedAt) })}`}
         </span>
       </div>
       <div className="play-groups">
         {showEndgame && <SplitGroup title={t('tracker.play.endgame')} a={v.maps} b={v.hideout} labelA={t('tracker.play.maps')} labelB={t('tracker.play.hideout')} />}
         {showStory && <SplitGroup title={t('tracker.play.story')} a={v.campaign} b={v.town} labelA={t('tracker.play.campaign')} labelB={t('tracker.play.town')} />}
       </div>
-      {extras.length > 0 && <p className="muted" style={{ margin: 'var(--sp-3) 0 0' }}>{extras.join(' · ')}</p>}
+      {extras.length > 0 && <p className="muted play-extras" style={{ margin: 'var(--sp-3) 0 0' }}>{extras.map((x) => <span key={x}>{x}</span>)}</p>}
       {previous.length > 0 && (
         <details style={{ marginTop: 'var(--sp-3)' }}>
           <summary className="muted">{t('tracker.play.history')}</summary>

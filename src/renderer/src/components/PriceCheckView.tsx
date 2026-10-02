@@ -12,6 +12,7 @@ import { TierBadge, TierSelect } from './TierSelect'
 import { Hint } from './ui'
 import { UpgradeCard } from './UpgradeCard'
 import { ItemScore } from './ItemScore'
+import { X, ArrowSquareOut } from '@phosphor-icons/react'
 
 export interface ResearchExtra {
   siteFilters: Record<string, Record<string, FilterValue>>
@@ -156,7 +157,7 @@ export function PriceCheckView({ text, result, loading, onResearch, onClose }: P
       </div>
       {onClose && (
         <button className="btn small" type="button" onClick={onClose} title={t('pc.close')}>
-          ✕
+          <X className="ico" size={14} weight="bold" aria-hidden="true" />
         </button>
       )}
     </div>
@@ -350,14 +351,14 @@ export function PriceCheckView({ text, result, loading, onResearch, onClose }: P
         </button>
         <AddToListButton text={text} />
         <button className="btn ghost" type="button" onClick={() => void api.openExternal({ kind: 'trade', league: result.league, queryId: result.queryId })}>
-          {t('pc.openTrade')} ↗
+          {t('pc.openTrade')} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
         </button>
         <button
           className="btn ghost"
           type="button"
           onClick={() => void api.openExternal({ kind: 'poe2db', name: item.rarity === 'Unique' && item.name ? item.name : (item.baseType ?? item.baseLine) })}
         >
-          {t('pc.openPoe2db')} ↗
+          {t('pc.openPoe2db')} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
         </button>
       </div>
     </div>

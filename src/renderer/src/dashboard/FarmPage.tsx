@@ -13,6 +13,7 @@ import { useSticky } from '../lib/sticky'
 import { MechanicsView } from './MechanicsView'
 import { RegexView } from './RegexView'
 import { toNumber } from './search/Suggest'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 
 type Tab = 'mechanics' | 'strategies' | 'calculator' | 'tablets' | 'regex'
 
@@ -131,7 +132,7 @@ function Strategies({ tablets }: { tablets: TabletPrice[] }) {
             <footer className="farm-foot">
               {s.sources.map((src, i) => (
                 <button key={src.url} type="button" className="btn ghost small" onClick={() => void api.openExternal({ kind: 'guide', strategyId: s.id, index: i })}>
-                  {src.label} ↗
+                  {src.label} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
                 </button>
               ))}
               {s.weakSource && <small className="muted">{t('farm.weakSource')}</small>}

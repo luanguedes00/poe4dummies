@@ -1,77 +1,35 @@
 # PoE4Dummies II
 
-Preços, price check e guia de campanha para **Path of Exile 2**, num app só, pensado para quem está começando ou joga casual.
+Preços, price check e guia de campanha para **Path of Exile 2**.
 
-## ⬇️ Baixar
-
-[![Baixar o instalador](https://img.shields.io/badge/BAIXAR-Instalador%20(recomendado)-d8b25e?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.2.1/PoE4Dummies-II-0.2.1-setup.exe)
+[![Baixar o instalador](https://img.shields.io/badge/BAIXAR-Instalador-d8b25e?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.0/PoE4Dummies-II-0.3.0-setup.exe)
 &nbsp;
-[![Baixar a versão portátil](https://img.shields.io/badge/BAIXAR-Port%C3%A1til%20(sem%20instalar)-555?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.2.1/PoE4Dummies-II-0.2.1-portable.exe)
+[![Baixar a versão portátil](https://img.shields.io/badge/BAIXAR-Port%C3%A1til-555?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.0/PoE4Dummies-II-0.3.0-portable.exe)
 
-1. Clique em um dos botões acima. O download começa na hora (cerca de 100 MB).
-2. Abra o arquivo baixado.
-3. Se aparecer "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**. O aviso aparece porque o app não tem assinatura digital paga.
-
-Versão atual: **0.2.1**. Todas as versões ficam em [Releases](https://github.com/luanguedes00/poe4dummies/releases).
-
-*Prices, price check and campaign helper for Path of Exile 2, in one app, made for new and casual players. English summary at the end.*
-
-> **Projeto feito em vibe coding.** O código foi escrito com IA (Claude, da Anthropic). A ideia, as decisões e os testes no jogo são do autor.
-> *Vibe-coded project: the code was written with AI (Anthropic's Claude), with direction and in-game testing by the author.*
+Se o Windows avisar "O Windows protegeu o computador": **Mais informações → Executar assim mesmo**.
 
 ![Mercado](docs/screenshots/mercado.png)
 
-## Qual baixar
+## O que tem
 
-| Arquivo | Para quem |
-|---|---|
-| `PoE4Dummies-II-<versão>-setup.exe` | **Instalável.** Cria atalhos na Área de Trabalho e no Menu Iniciar e aparece em "Adicionar ou remover programas". Não pede administrador. |
-| `PoE4Dummies-II-<versão>-portable.exe` | **Portátil.** Não instala nada: é só abrir. |
-
-As duas usam as mesmas configurações. Desinstalar não apaga as configurações nem o cache.
-
-**Requisitos:** Windows 10 ou 11, jogo em **inglês** e PoE2 em **Windowed Fullscreen**, para a sobreposição aparecer por cima do jogo. A interface do app é em português ou inglês.
-
-## O que ele faz
-
-| | |
-|---|---|
-| **Mercado** | Preço de todas as categorias do poe.ninja em Exalted, Divine ou Chaos, com gráfico, médias e "momento de compra". |
-| **Price check no jogo** | `Ctrl+C` em um item com o jogo em foco: preço, nota do item, tier de cada mod e filtros iguais aos do site de trade. Clique fora ou `Esc` fecha. |
-| **Buscar preço** | Busca completa, igual ao site de trade, com filtro por tier (T1, T2…) e link para abrir o site com os mesmos filtros. |
-| **Lista** | Some o loot do mapa: passe o mouse no item e aperte `F3` (dá para trocar a tecla). O `Ctrl+C` continua sendo o price check. |
-| **Campanha e mapas** | Lê o log do jogo: seu nível × nível da área, dicas da campanha por área, tempo por ato, mapas por hora e o resumo da sessão ao fechar o jogo (mapas × hideout, campanha × cidade, AFK separado). |
-| **Builds** | Importa sua build pelo link do poe.ninja ou pelo código do Path of Building 2 e compara com a de um guia. **Comparar e plano** está em **beta**. |
-| **Farm** *(beta)* | Guia por mecânica com custo dos tablets, calculadora e gerador de regex para achar tablets no baú. |
-
-Ao fechar a janela, o app pode ficar minimizado na bandeja (perto do relógio), e o overlay continua funcionando.
+- **Mercado** com preço, gráfico e variação de todas as categorias.
+- **Price check no jogo:** `Ctrl+C` num item mostra preço, nota e tier dos mods. Clique fora para fechar.
+- **Lista de loot:** `F3` sobre o item soma o valor do mapa.
+- **Campanha e mapas:** nível da área, dicas por zona, mapas por hora e resumo da sessão.
+- **Builds** *(beta)*: compara a sua build com a de um guia.
+- **Farm** *(beta)*: custo dos tablets e regex para achar tablets no baú.
 
 <p>
-  <img src="docs/screenshots/sobreposicao.png" alt="Price check no jogo" width="300">
-  <img src="docs/screenshots/campanha.png" alt="Dica da campanha" width="360">
+  <img src="docs/screenshots/sobreposicao.png" alt="Price check" width="320">
 </p>
 
-![Plano da build](docs/screenshots/plano-build.png)
+## Requisitos
 
-![Regex de tablets](docs/screenshots/regex.png)
+Windows 10 ou 11, jogo em inglês e em Windowed Fullscreen.
 
-## Privacidade e segurança
+Sem login e sem coleta de dados. O app só lê o log do jogo no seu PC e respeita o limite de buscas da trade.
 
-- **Sem login.** O app não pede senha, conta nem POESESSID.
-- **Nada sai do seu computador.** Não tem telemetria nem coleta de dados.
-- **O log do jogo (`Client.txt`) é lido no seu PC.** O app não lê a memória do jogo e não automatiza ações dentro dele.
-- **Ele respeita o limite de buscas da trade da GGG.** Fila com prioridade e cache: o que já foi baixado não é baixado de novo.
-- **As janelas rodam isoladas** (sandbox, sem Node na interface, sem scripts externos).
-
-## Fontes de dados
-
-- [poe.ninja](https://poe.ninja): preços e histórico.
-- API pública de trade do pathofexile.com, sem login.
-- [RePoE](https://github.com/repoe-fork/repoe): dados de mods, tiers e ícones do jogo.
-
-## Rodar a partir do código
-
-Requer [Node.js 24](https://nodejs.org).
+## Para quem programa
 
 ```bash
 npm install
@@ -79,33 +37,8 @@ npm run build
 npx electron .
 ```
 
-| Comando | O que faz |
-|---|---|
-| `npm run dev` | Modo de desenvolvimento |
-| `npm run check` | Tipos + testes |
-| `npm run dist` | Gera o instalador e o `.exe` portátil em `dist/` |
+`npm run check` roda tipos e testes. `npm run dist` gera o instalador e o portátil.
 
-Estrutura: `src/core` (lógica pura, sem Electron), `src/main` (processo principal: janelas, rede, cache), `src/renderer` (interface em React), `src/shared` (contrato IPC e textos em pt-BR/en), `tests` (Vitest).
+---
 
-## English
-
-PoE4Dummies II is a Windows app for Path of Exile 2:
-- currency market with charts;
-- in-game price check (`Ctrl+C`, only while the game is focused) with item score and mod tiers;
-- full trade search with tier filters;
-- loot list;
-- campaign and map tracker that reads the local `Client.txt`;
-- build comparison (beta);
-- farming guide with a tablet regex generator (beta).
-
-No login, no telemetry, and it respects GGG's trade rate limits. Download the installer (`setup.exe`) or the portable `.exe` from [Releases](../../releases/latest). The game client must be in English.
-
-## Aviso
-
-This product isn't affiliated with or endorsed by Grinding Gear Games in any way.
-
-Path of Exile e todos os nomes, imagens e marcas relacionados pertencem à Grinding Gear Games.
-
-## Licença
-
-[MIT](LICENSE)
+Projeto feito em vibe coding, com IA (Claude). This product isn't affiliated with or endorsed by Grinding Gear Games in any way. Licença [MIT](LICENSE).

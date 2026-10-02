@@ -11,6 +11,7 @@ import { ItemIcon } from '../components/ItemIcon'
 import { changeClass, Hint } from '../components/ui'
 import { api, useApp } from '../lib/app'
 import { buildRows, type MarketRow } from '../lib/market'
+import { Star, ArrowSquareOut, CaretUp, CaretDown } from '@phosphor-icons/react'
 
 const UNIT_NAMES: Record<string, string> = { exalted: 'Exalted', divine: 'Divine', chaos: 'Chaos' }
 
@@ -104,11 +105,11 @@ function ItemDrawer({ row, onClose }: { row: MarketRow; onClose: () => void }) {
             aria-pressed={watched}
             onClick={() => isNinjaCategory(item.category) && void api.toggleWatch({ category: item.category, itemId: item.id })}
           >
-            {watched ? `★ ${t('market.unwatch')}` : `☆ ${t('market.watch')}`}
+            {watched ? <><Star className="ico" size={14} weight="fill" aria-hidden="true" /> {t('market.unwatch')}</> : <><Star className="ico" size={14} aria-hidden="true" /> {t('market.watch')}</>}
           </button>
           {market.league && (
             <button className="btn ghost" type="button" onClick={() => void api.openExternal({ kind: 'ninja', league: market.league! })}>
-              poe.ninja ↗
+              poe.ninja <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -166,7 +167,7 @@ function ItemDrawer({ row, onClose }: { row: MarketRow; onClose: () => void }) {
                   {analysis.reasons.map((r) => (
                     <li key={r.code}>
                       <span className={r.weight > 0 ? 'up' : r.weight < 0 ? 'down' : 'muted'} aria-hidden="true">
-                        {r.weight > 0 ? '▲' : r.weight < 0 ? '▼' : '•'}
+                        {r.weight > 0 ? <CaretUp className="ico" size={12} weight="fill" aria-hidden="true" /> : r.weight < 0 ? <CaretDown className="ico" size={12} weight="fill" aria-hidden="true" /> : '•'}
                       </span>
                       <span>{t(`reason.${r.code}`, { value: r.value === undefined ? '' : Math.round(Math.abs(r.value)) })}</span>
                     </li>

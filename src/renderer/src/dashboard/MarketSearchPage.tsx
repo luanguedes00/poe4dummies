@@ -16,6 +16,7 @@ import { useSticky } from '../lib/sticky'
 import { FilterSections, isActive, type FilterDraft, type FilterDrafts } from '../components/FilterSections'
 import { StatGroupEditor, type StatGroupDraft } from './search/StatGroupEditor'
 import { rank, Suggest, toNumber } from './search/Suggest'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 
 interface ItemOption {
   label: string
@@ -256,11 +257,11 @@ export function MarketSearchPage() {
                 <ListingList listings={result.listings} />
                 <div className="pc-foot">
                   <button className="btn primary" type="button" onClick={() => void api.openExternal({ kind: 'trade', league: result.league, queryId: result.queryId })}>
-                    {t('search.openTrade')} ↗
+                    {t('search.openTrade')} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
                   </button>
                   {item && (
                     <button className="btn ghost" type="button" onClick={() => void api.openExternal({ kind: 'poe2db', name: item.name ?? item.type })}>
-                      {t('pc.openPoe2db')} ↗
+                      {t('pc.openPoe2db')} <ArrowSquareOut className="ico" size={14} aria-hidden="true" />
                     </button>
                   )}
                 </div>

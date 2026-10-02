@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { watchKey } from '../../../core/market/watchlist'
 import { isNinjaCategory, NINJA_CATEGORIES, type NinjaCategory } from '../../../core/categories'
 import { Sparkline } from '../components/charts'
@@ -9,6 +9,7 @@ import { api, useApp } from '../lib/app'
 import { useSticky } from '../lib/sticky'
 import { buildRows, type MarketRow } from '../lib/market'
 import { useItemDrawer } from './ItemDrawer'
+import { CaretUp, CaretDown, Star } from '@phosphor-icons/react'
 
 type SortKey = 'name' | 'price' | 'change' | 'volume'
 
@@ -94,7 +95,7 @@ export function MarketPage() {
             <b>{r.item.name}</b>
             <span className="num">{price(r.item.valueDivine)}</span>
             <span className={`num ${changeClass(r.change)}`}>
-              {(r.change ?? 0) >= 0 ? '▲' : '▼'} {percent(r.change)}
+              {(r.change ?? 0) >= 0 ? <CaretUp className="ico" size={11} weight="fill" aria-hidden="true" /> : <CaretDown className="ico" size={11} weight="fill" aria-hidden="true" />} {percent(r.change)}
             </span>
           </button>
         ))}
@@ -212,7 +213,7 @@ export function MarketPage() {
                         if (isNinjaCategory(r.item.category)) void api.toggleWatch({ category: r.item.category, itemId: r.item.id })
                       }}
                     >
-                      {isWatched ? '★' : '☆'}
+                      <Star className="ico" size={15} weight={isWatched ? 'fill' : 'regular'} aria-hidden="true" />
                     </button>
                   </td>
                   <td>

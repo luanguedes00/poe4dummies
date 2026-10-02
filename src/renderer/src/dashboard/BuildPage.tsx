@@ -11,6 +11,7 @@ import type { BuildItemInfo } from '../../../shared/ipc'
 import { iconSrc } from '../components/ItemIcon'
 import { api, errorKey, timeAgo, useApp } from '../lib/app'
 import { useSticky } from '../lib/sticky'
+import { ArrowSquareOut } from '@phosphor-icons/react'
 
 // Respostas já buscadas nesta sessão: voltar para a página não pede nada de novo.
 const itemInfoMemo = new Map<string, BuildItemInfo | null>()
@@ -103,7 +104,7 @@ function TradeButton({ kind, slot }: { kind: BuildKind; slot: string }) {
             .catch(() => setState({ kind: 'error', code: 'unexpected' }))
         }}
       >
-        {busy ? t('build.trade.busy') : `${t('build.trade')} ↗`}
+        {busy ? t('build.trade.busy') : <>{t('build.trade')} <ArrowSquareOut className="ico" size={14} aria-hidden="true" /></>}
       </button>
       {state.kind === 'error' && <small className="down">{t(errorKey(state.code), { seconds: 60 })}</small>}
     </div>

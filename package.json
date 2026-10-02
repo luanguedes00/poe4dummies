@@ -1,7 +1,7 @@
 {
   "name": "oraculo-poe2",
   "productName": "PoE4Dummies II",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "author": "luanguedes00",
   "license": "MIT",
@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/geist-sans": "^5.3.0",
+    "@phosphor-icons/react": "^2.1.10",
     "fast-xml-parser": "^5.11.2",
     "koffi": "^3.3.2",
     "react": "^19.3.0",

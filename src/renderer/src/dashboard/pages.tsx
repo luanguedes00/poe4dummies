@@ -13,6 +13,7 @@ import { changeClass, EmptyState, Hint, TableSkeleton } from '../components/ui'
 import { api, useApp } from '../lib/app'
 import { buildRows } from '../lib/market'
 import { useItemDrawer } from './ItemDrawer'
+import { CaretUp, CaretDown, Star } from '@phosphor-icons/react'
 
 export function OpportunitiesPage() {
   const { t, market, unit, price, percent, locale } = useApp()
@@ -59,8 +60,8 @@ export function OpportunitiesPage() {
     <>
       <h2 className="page-title">{t('opp.title')}</h2>
       <div className="cols3">
-        {list(<><span className="up">▲</span> {t('opp.risers')}</>, movers.risers, 'change')}
-        {list(<><span className="down">▼</span> {t('opp.fallers')}</>, movers.fallers, 'change')}
+        {list(<><CaretUp className="ico up" size={12} weight="fill" aria-hidden="true" /> {t('opp.risers')}</>, movers.risers, 'change')}
+        {list(<><CaretDown className="ico down" size={12} weight="fill" aria-hidden="true" /> {t('opp.fallers')}</>, movers.fallers, 'change')}
         {list(t('opp.traded'), movers.mostTraded, 'volume')}
       </div>
     </>
@@ -117,10 +118,21 @@ export function WatchlistPage({ onGoMarket }: { onGoMarket: () => void }) {
                   chaosPerDivine: w.baselineChaosPerDivine,
                 })
                 return (
-                  <tr key={key} className={item ? 'clickable' : ''} onClick={() => item && openItem(key)}>
+                  <tr
+                    key={key}
+                    className={item ? 'clickable' : ''}
+                    tabIndex={item ? 0 : undefined}
+                    onClick={() => item && openItem(key)}
+                    onKeyDown={(e) => {
+                      if (item && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault()
+                        openItem(key)
+                      }
+                    }}
+                  >
                     <td>
                       <span className="star on" aria-hidden="true">
-                        ★
+                        <Star className="ico" size={15} weight="fill" aria-hidden="true" />
                       </span>
                     </td>
                     <td>

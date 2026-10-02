@@ -60,7 +60,7 @@ function OverlayApp() {
 
   if (collection) {
     return (
-      <div className="overlay-root collection">
+      <div className="overlay-root collection" aria-live="polite">
         <CollectionPanel
           view={collection}
           t={t}
@@ -78,7 +78,7 @@ function OverlayApp() {
   }
 
   return (
-    <div className="overlay-root">
+    <div className="overlay-root" aria-live="polite">
       {/* Sem botão de fechar: some ao clicar fora, com Esc ou trocando de programa (processo principal). */}
       <PriceCheckView text={text} result={result} loading={loading} onResearch={(o, extra) => void research(o, extra)} />
     </div>

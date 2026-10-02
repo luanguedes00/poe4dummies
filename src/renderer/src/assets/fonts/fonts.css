@@ -1,35 +1,5 @@
 /* Fontes embutidas (SIL OFL 1.1, ver OFL.txt). A CSP só permite fontes do próprio app. */
 
-/* Texto: Lato, humanista e legível em tamanho pequeno. */
-@font-face {
-  font-family: 'Lato';
-  src: url('./LatoLatin-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Lato';
-  src: url('./LatoLatin-Italic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Lato';
-  src: url('./LatoLatin-Medium.woff2') format('woff2');
-  font-weight: 500 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Lato';
-  src: url('./LatoLatin-Bold.woff2') format('woff2');
-  font-weight: 700 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Números e preços: Inconsolata, estreita e tabular (cabe mais coluna).
    Um peso só; a faixa evita negrito falso do navegador. */
 @font-face {

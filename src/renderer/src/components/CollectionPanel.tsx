@@ -4,6 +4,7 @@
 
 import type { CollectionEntry, CollectionView } from '../../../core/collection/collection'
 import { ItemIcon } from './ItemIcon'
+import { X } from '@phosphor-icons/react'
 
 /** Chaves de texto usadas aqui (todas precisam existir em src/shared/i18n.ts). */
 export type CollectionMessageKey =
@@ -124,7 +125,7 @@ export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onT
         </div>
         {onClose && (
           <button className="btn small" type="button" onClick={onClose} title={t('pc.close')} aria-label={t('pc.close')}>
-            ✕
+            <X className="ico" size={14} weight="bold" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -187,7 +188,7 @@ export function CollectionPanel({ view, t, price, amount, onRemove, onClear, onT
                 title={t('collection.remove')}
                 aria-label={`${t('collection.remove')}: ${e.name}`}
               >
-                ✕
+                <X className="ico" size={14} weight="bold" aria-hidden="true" />
               </button>
             </div>
           )
