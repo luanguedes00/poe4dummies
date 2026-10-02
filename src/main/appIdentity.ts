@@ -27,6 +27,8 @@ export function applyAppIdentity(): void {
     const details = { target, args, icon, iconIndex: 0, appUserModelId: APP_USER_MODEL_ID, description: 'PoE4Dummies II' }
     const current = existsSync(shortcut) ? safeRead(shortcut) : null
     if (current && current.target === target && current.args === args && current.icon === icon && current.appUserModelId === APP_USER_MODEL_ID) return
+    // Portátil não toma o atalho da versão instalada (o instalado continua abrindo pelo Menu Iniciar).
+    if (portable && current?.target && current.target !== target && existsSync(current.target)) return
     shell.writeShortcutLink(shortcut, current ? 'replace' : 'create', details)
   } catch {
     // Sem permissão no Menu Iniciar: a janela continua com o ícone próprio.

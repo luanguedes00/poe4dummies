@@ -5,7 +5,7 @@ import { basename, join } from 'node:path'
 import appIcon from '../../build/icon.png?asset'
 import { APP_ORIGIN } from './appProtocol'
 import { captureDir } from './devCapture'
-import { focusGame, foregroundExe, isGameExe, pointerState } from './gameFocus'
+import { exeUnderCursor, focusGame, foregroundExe, isGameExe, pointerState } from './gameFocus'
 import { secureWebPreferences } from './security'
 
 const BACKGROUND = '#0e0f11'
@@ -124,7 +124,9 @@ function closeOnOutsideClick(win: BrowserWindow): () => void {
     if (click) {
       const p = screen.getCursorScreenPoint()
       const b = win.getBounds()
-      if (p.x < b.x || p.x >= b.x + b.width || p.y < b.y || p.y >= b.y + b.height) return win.hide()
+      const outside = p.x < b.x || p.x >= b.x + b.width || p.y < b.y || p.y >= b.y + b.height
+      // Clique numa janela do próprio app (ex.: lista de um <select> que passou da borda) não fecha.
+      if (outside && exeUnderCursor()?.toLowerCase() !== ownExe) return win.hide()
     }
     // Trocou para outro programa (nem o jogo, nem este app). Checagem mais cara: 4x por segundo basta.
     if (++ticks % 5 !== 0) return

@@ -47,8 +47,6 @@ export const overlaySettingsSchema = z.object({
   listingStatus: z.enum(['online', 'securable', 'any']),
   /** Só reage a Ctrl+C com o Path of Exile 2 em foco (ignora navegador, Discord etc.). */
   requireGameFocus: z.boolean(),
-  /** Veredito: abaixo deste valor (em Exalted) o item não compensa anunciar. */
-  minSellExalted: z.number().min(0).max(100_000),
   /** Atalho da sobreposição. null = cópia do próprio jogo (Ctrl+C / Ctrl+Alt+C), sem atalho global. */
   hotkey: hotkeySchema.nullable(),
   /** Com atalho próprio: qual cópia do jogo simular (avançada traz os tiers dos mods). */
@@ -116,7 +114,6 @@ export const DEFAULT_SETTINGS: Settings = {
     // Compra instantânea (lojinha): é o que dá para comprar na hora; "online" inclui quem só vende por whisper.
     listingStatus: 'securable',
     requireGameFocus: true,
-    minSellExalted: 5,
     hotkey: DEFAULT_HOTKEYS.overlay,
     copyMode: 'simple',
   },

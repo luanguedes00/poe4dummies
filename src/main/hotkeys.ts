@@ -57,8 +57,13 @@ export class HotkeyManager {
    */
   trySet(slot: HotkeySlot, accelerator: string | null): boolean {
     if (this.suspended) this.resume()
-    // Fora do jogo o atalho "só no jogo" não é registrado agora: salva e registra ao voltar para o jogo.
+    // Fora do jogo o atalho "só no jogo" não fica registrado: testa se o sistema aceita (outro programa
+    // pode já usar a tecla), solta na hora e registra de verdade ao voltar para o jogo.
     if (this.inactive.has(slot)) {
+      if (accelerator && accelerator !== this.wanted.get(slot)) {
+        if (!register(accelerator, () => undefined)) return false
+        globalShortcut.unregister(accelerator)
+      }
       this.wanted.set(slot, accelerator)
       return true
     }

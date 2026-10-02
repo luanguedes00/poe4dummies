@@ -164,7 +164,6 @@ input[type='checkbox']:focus-visible { outline-offset: 1px; }
 .page-title { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-size: 17px; font-weight: 600; margin: 0; letter-spacing: 0.08em; color: var(--fg); }
 .page-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-line), transparent); }
 .page-meta { margin: -10px 0 0 18px; font-size: var(--fs-xs); color: var(--muted); }
-.page-intro { margin: -8px 0 0; max-width: 80ch; font-size: var(--fs-sm); color: var(--muted); }
 .banner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: 8px 14px; border-radius: var(--r); background: var(--down-soft); color: var(--down); border: 0; border-left: 2px solid var(--down); }
 .banner.info { background: var(--panel); color: var(--muted); border-left-color: var(--gold-dim); }
 .toast { position: fixed; right: var(--sp-4); bottom: var(--sp-4); z-index: 60; padding: 10px 14px; background: var(--up-soft); color: var(--up); border: 1px solid var(--up); border-radius: var(--r); font-size: var(--fs-sm); }
@@ -454,8 +453,6 @@ th.sorted .sort-ind { opacity: 1; }
 .recipe-top { display: flex; align-items: center; gap: var(--sp-2); }
 .recipe-top b { flex: 1; }
 .recipe-price { color: var(--muted); }
-.real-price { color: var(--fg); font-weight: 500; }
-.recipe-actions { display: flex; align-items: center; gap: var(--sp-2); }
 .rarity-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 1px 6px; border-radius: 0; background: none; border-left: 2px solid currentColor; }
 .rarity-tag.rare { color: var(--rare); }
 .rarity-tag.magic { color: var(--prefix); }
@@ -463,12 +460,6 @@ th.sorted .sort-ind { opacity: 1; }
 .farm-total.sub { border-top: 0; padding-top: 0; color: var(--muted); }
 
 /* Veredito: vende / guarda / lixo */
-.verdict-banner { display: flex; align-items: baseline; gap: 10px; padding: 8px var(--sp-3); border-bottom: 1px solid var(--line-soft); font-size: var(--fs-sm); }
-.verdict-banner b { font-family: var(--font-display); font-weight: 700; font-size: 13.5px; letter-spacing: 0.12em; padding: 2px 9px; border-radius: var(--r); }
-.verdict-banner.sell b { background: var(--up-soft); color: var(--up); }
-.verdict-banner.keep b { background: var(--warn-soft); color: var(--warn); }
-.verdict-banner.junk b { background: var(--panel-2); color: var(--muted); }
-.verdict-banner span { color: var(--muted); }
 
 /* "É upgrade para a sua build?" */
 .upgrade { display: flex; flex-direction: column; gap: 6px; padding: 8px var(--sp-3); border-bottom: 1px solid var(--line-soft); font-size: var(--fs-sm); }
@@ -578,7 +569,6 @@ details.upgrade[open] > summary::before { content: '▾'; }
 .icon-loading { display: block; width: 60%; height: 60%; min-width: 16px; min-height: 16px; border-radius: 2px;
   background: linear-gradient(90deg, var(--panel-2) 25%, var(--line) 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
 .gem-icon.icon-loading { width: 22px; height: 22px; min-width: 0; min-height: 0; border-radius: 50%; }
-@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .icon-loading { animation: none; } }
 .doll-slot { position: relative; }
 .doll-slot .icon-loading:not(.gem-icon) { position: absolute; inset: 20%; width: auto; height: auto; }
@@ -720,7 +710,6 @@ legend { padding: 0 10px 0 0; color: var(--gold); font-size: 12px; font-weight: 
 }
 
 /* Currency: uma moeda por linha. */
-.pc-multi { display: block; }
 
 /* Plano: mods de tier baixo de uma peça. */
 .plan-tier { display: block; margin-top: 2px; }
@@ -760,11 +749,6 @@ legend { padding: 0 10px 0 0; color: var(--gold); font-size: 12px; font-weight: 
 .seller-tier { font-family: var(--font-mono); color: var(--muted); }
 
 /* Veredito: nota do item e confiança do preço. */
-.verdict-banner { flex-wrap: wrap; }
-.verdict-meta { flex-basis: 100%; color: var(--muted); font-size: var(--fs-xs); }
-.verdict-score { font-family: var(--font-mono); color: var(--fg); }
-.verdict-meta.conf-high { color: var(--up); }
-.verdict-meta.conf-low, .verdict-meta.conf-none { color: var(--warn); }
 
 /* Campanha: o que fazer na área (aviso no canto e aba Campanha). */
 .overlay-root.zone { height: 100%; }
@@ -783,10 +767,6 @@ legend { padding: 0 10px 0 0; color: var(--gold); font-size: 12px; font-weight: 
 .market-top h3 { margin: 0; font-size: var(--fs-lg); }
 .market-top-mods { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); }
 .market-top-mods .num { display: inline-block; min-width: 40px; color: var(--gold); }
-.zone-levels { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--fg); }
-.zone-levels .zone-gap { color: var(--up); }
-.zone-levels.edge .zone-gap { color: var(--warn); }
-.zone-levels.penalty .zone-gap { color: var(--down); }
 .zone-empty { margin: 0; font-size: var(--fs-sm); }
 .zone-head.drag { cursor: move; }
 
@@ -816,7 +796,6 @@ html:has(.campaign-body), body.campaign-body { background: transparent !importan
 .campaign-root .zone-head b { font-size: var(--fs-md); letter-spacing: 0.02em; }
 .campaign-root .zone-head .btn { opacity: 0.4; }
 .campaign-root:hover .zone-head .btn { opacity: 1; }
-.campaign-root .zone-levels { font-size: var(--fs-xs); color: var(--muted); }
 .campaign-root .zone-tasks { font-size: var(--fs-sm); }
 
 /* Quadro da campanha, enxuto: nome + selo de nível, lista com pontos e etiquetas. */
@@ -826,7 +805,6 @@ html:has(.campaign-body), body.campaign-body { background: transparent !importan
 .zone-diff { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; padding: 1px 6px; border-radius: 4px; background: rgb(64 160 96 / 0.25); color: var(--up); }
 .zone-diff.edge { background: rgb(214 170 70 / 0.25); color: var(--warn); }
 .zone-diff.penalty { background: rgb(200 70 60 / 0.3); color: var(--down); }
-.zone-close { -webkit-app-region: no-drag; border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 4px; opacity: 0; transition: opacity 0.15s; }
 .zone-card:hover .zone-close { opacity: 1; }
 .zone-tasks { gap: 3px; padding-left: 14px; list-style: disc; }
 .zone-tasks li { color: var(--fg); line-height: 1.45; }
@@ -899,5 +877,5 @@ legend { color: var(--fg); }
 /* Títulos sem palavra sozinha na última linha. */
 h1, h2, h3, h4, .page-title { text-wrap: balance; }
 /* Serifa só no logotipo: demais títulos e nomes em Geist. */
-.drawer-head h3, .guide h3, .verdict-banner b, .upgrade-verdict, .build-hero-main h3, .weapon-sets button,
+.drawer-head h3, .guide h3, .upgrade-verdict, .build-hero-main h3, .weapon-sets button,
 .item-card header b, .zone-head b, .close-head h3 { font-family: var(--font-body); letter-spacing: 0; }

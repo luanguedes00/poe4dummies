@@ -19,6 +19,8 @@ interface Win32 {
   findWindow: (className: string | null, title: string | null) => unknown
   getAsyncKeyState: (vKey: number) => number
   setForegroundWindow: (hwnd: unknown) => boolean
+  getCursorPos: (pt: { x: number; y: number }) => boolean
+  windowFromPoint: (pt: { x: number; y: number }) => unknown
 }
 
 const PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
@@ -34,6 +36,7 @@ function load(): Win32 | null {
     const koffi = require('koffi') as typeof koffiType
     const user32 = koffi.load('user32.dll')
     const kernel32 = koffi.load('kernel32.dll')
+    koffi.struct('POINT', { x: 'long', y: 'long' })
     win32 = {
       getClipboardSequenceNumber: user32.func('uint32 __stdcall GetClipboardSequenceNumber()'),
       getForegroundWindow: user32.func('void* __stdcall GetForegroundWindow()'),
@@ -46,6 +49,8 @@ function load(): Win32 | null {
       findWindow: user32.func('void* __stdcall FindWindowW(str16 className, str16 title)'),
       getAsyncKeyState: user32.func('int16 __stdcall GetAsyncKeyState(int vKey)'),
       setForegroundWindow: user32.func('bool __stdcall SetForegroundWindow(void* hwnd)'),
+      getCursorPos: user32.func('bool __stdcall GetCursorPos(_Out_ POINT *pt)'),
+      windowFromPoint: user32.func('void* __stdcall WindowFromPoint(POINT pt)'),
     }
   } catch {
     win32 = null
@@ -158,6 +163,22 @@ export function pointerState(): { mouse: boolean; escape: boolean } | null {
   try {
     const down = (vk: number) => (api.getAsyncKeyState(vk) & 0x8000) !== 0
     return { mouse: down(VK_LBUTTON) || down(VK_RBUTTON) || down(VK_MBUTTON), escape: down(VK_ESCAPE) }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Executável da janela embaixo do mouse (ex.: a lista aberta de um <select> do app,
+ * que pode passar da borda da sobreposição). null quando não dá para saber.
+ */
+export function exeUnderCursor(): string | null {
+  const api = load()
+  if (!api) return null
+  try {
+    const pt = { x: 0, y: 0 }
+    if (!api.getCursorPos(pt)) return null
+    return windowExe(api, api.windowFromPoint(pt))
   } catch {
     return null
   }

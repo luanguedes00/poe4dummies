@@ -261,6 +261,9 @@ if (!app.requestSingleInstanceLock()) {
 
     // Tecla "adicionar à lista" (padrão F3, só com o jogo em foco): copia o item sob o mouse e manda para a lista.
     // Assim o Ctrl+C fica só para o price check (antes, com o modo lista ligado, o Ctrl+C ia para a lista).
+    // Janela para reconhecer a cópia simulada (o jogo copia em menos de 0,5 s; o observador lê a cada 250 ms).
+    // Curta de propósito: F3 sem item embaixo não pode capturar o Ctrl+C seguinte do usuário.
+    const SIMULATED_COPY_MS = 700
     let listCopyAt = 0
     const collectionAddHotkey = () => {
       if (focusState() !== 'game') return
@@ -269,14 +272,14 @@ if (!app.requestSingleInstanceLock()) {
     }
 
     const clipboardWatcher = new ClipboardWatcher((text) => {
-      const viaList = Date.now() - listCopyAt < 1500
+      const viaList = Date.now() - listCopyAt < SIMULATED_COPY_MS
       listCopyAt = 0
       if (viaList) {
         if (!collection.isEnabled()) collection.setEnabled(true)
         collection.add(text)
         return
       }
-      const viaHotkey = Date.now() - hotkeyCopyAt < 1500
+      const viaHotkey = Date.now() - hotkeyCopyAt < SIMULATED_COPY_MS
       hotkeyCopyAt = 0
       const current = settings.get().overlay
       if (!viaHotkey) {

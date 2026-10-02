@@ -29,11 +29,12 @@ export function TickerTape({ children, itemsKey }: { children: ReactNode; itemsK
     const el = ref.current
     if (!el || !overflow) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const width = () => el.querySelector<HTMLElement>('.ticker-group')?.offsetWidth ?? 1
-    const wrap = (x: number) => {
-      const w = width()
-      return ((x % w) + w) % w
-    }
+    // Largura medida uma vez e só atualizada quando muda (ler a cada quadro força recálculo de layout).
+    const group = el.querySelector<HTMLElement>('.ticker-group')
+    let w = group?.offsetWidth || 1
+    const ro = new ResizeObserver(() => (w = group?.offsetWidth || 1))
+    if (group) ro.observe(group)
+    const wrap = (x: number) => ((x % w) + w) % w
     let pos = el.scrollLeft
     let paused = false
     let last = performance.now()
@@ -65,6 +66,7 @@ export function TickerTape({ children, itemsKey }: { children: ReactNode; itemsK
     el.addEventListener('focusout', resume)
     return () => {
       cancelAnimationFrame(raf)
+      ro.disconnect()
       el.removeEventListener('wheel', onWheel)
       el.removeEventListener('mouseenter', pause)
       el.removeEventListener('mouseleave', resume)

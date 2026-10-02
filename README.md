@@ -2,9 +2,9 @@
 
 Preços, price check e guia de campanha para **Path of Exile 2**.
 
-[![Baixar o instalador](https://img.shields.io/badge/BAIXAR-Instalador-d8b25e?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.0/PoE4Dummies-II-0.3.0-setup.exe)
+[![Baixar o instalador](https://img.shields.io/badge/BAIXAR-Instalador-d8b25e?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.5/PoE4Dummies-II-0.3.5-setup.exe)
 &nbsp;
-[![Baixar a versão portátil](https://img.shields.io/badge/BAIXAR-Port%C3%A1til-555?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.0/PoE4Dummies-II-0.3.0-portable.exe)
+[![Baixar a versão portátil](https://img.shields.io/badge/BAIXAR-Port%C3%A1til-555?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/luanguedes00/poe4dummies/releases/download/v0.3.5/PoE4Dummies-II-0.3.5-portable.exe)
 
 Se o Windows avisar "O Windows protegeu o computador": **Mais informações → Executar assim mesmo**.
 

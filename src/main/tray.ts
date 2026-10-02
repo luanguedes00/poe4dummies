@@ -50,6 +50,8 @@ export class TrayController {
 
   /** Liga o X da janela à escolha do usuário. */
   attach(win: BrowserWindow): void {
+    // Windows desligando ou saindo da sessão: fecha sem perguntar (senão o app segura o desligamento).
+    win.on('session-end', () => (this.quitting = true))
     win.on('close', (event) => {
       if (this.quitting) return
       const current = this.settings.get()
